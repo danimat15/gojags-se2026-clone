@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, use } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ChevronLeft,
   ChevronRight,
@@ -65,10 +66,16 @@ function useCompletedItems() {
   return { completedIds, toggle };
 }
 
-export default function CoursePage() {
+interface PageProps {
+  params: Promise<{ itemId?: string[] }>;
+}
+
+export default function CoursePage({ params }: PageProps) {
+  const resolvedParams = use(params);
+  const router = useRouter();
   const [isDark, setIsDark] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeItemId, setActiveItemId] = useState("item-2-1");
+  const activeItemId = resolvedParams.itemId?.[0] || "item-2-1";
   const [activeTab, setActiveTab] = useState<TabKey>("informasi");
   const { completedIds, toggle } = useCompletedItems();
 
@@ -95,12 +102,12 @@ export default function CoursePage() {
 
   const handleItemSelect = useCallback(
     (item: ContentItem) => {
-      setActiveItemId(item.id);
+      router.push(`/course/${item.id}`);
       setActiveTab("informasi");
       if (window.innerWidth < 1024) setSidebarOpen(false);
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
-    []
+    [router]
   );
 
   const activeSection = courseData.sections.find((s) =>
@@ -163,9 +170,12 @@ export default function CoursePage() {
 
           {/* user badge */}
           <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-gray-800">
-            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-white text-[10px] font-bold">
-              B
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/bps-logo.png"
+              alt="BPS Logo"
+              className="w-5 h-5 object-contain"
+            />
             <span className="text-xs font-medium text-gray-700 dark:text-gray-300 max-w-[130px] truncate">
               BPS Kab. Kepulauan Sangihe
             </span>
@@ -205,6 +215,7 @@ export default function CoursePage() {
         isOpen={sidebarOpen}
         completedIds={completedIds}
         progress={progress}
+        onClose={() => setSidebarOpen(false)}
       />
 
       {/* ── Main content ── */}
@@ -488,9 +499,12 @@ function InformasiTab({
           Penyelenggara
         </h2>
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center shadow-md flex-shrink-0">
-            <BarChart3 className="w-6 h-6 text-white" />
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/bps-logo.png"
+            alt="BPS Logo"
+            className="w-12 h-12 object-contain flex-shrink-0"
+          />
           <div>
             <h3 className="font-bold text-sm text-gray-900 dark:text-white">
               BPS Kabupaten Kepulauan Sangihe
@@ -552,9 +566,9 @@ function ForumTab() {
 /* ── Tab: Unduhan ── */
 function UnduhanTab() {
   const files = [
-    { name: "Bahan Ajar SE2026", type: "PDF", size: "4.2 MB", emoji: "📄", url: "http://s.bps.go.id/se26petugas" },
-    { name: "Buku Pedoman SE2026", type: "PDF", size: "8.7 MB", emoji: "📚", url: "http://s.bps.go.id/se26petugas" },
-    { name: "Kuesioner SE2026", type: "PDF", size: "2.1 MB", emoji: "📋", url: "http://s.bps.go.id/se26petugas" },
+    { name: "Bahan Ajar", type: "Folder Drive", size: "—", emoji: "📄", url: "https://drive.google.com/drive/folders/1ok4nqFSHIuSts33LooUbogjy5SVtOH9G?usp=drive_link" },
+    { name: "Panduan", type: "Folder Drive", size: "—", emoji: "📚", url: "https://drive.google.com/drive/folders/1MifWV2tW0MKPe-05Lz3h1CLqxbgcJQ0U?usp=drive_link" },
+    { name: "Kuesioner", type: "Folder Drive", size: "—", emoji: "📋", url: "https://drive.google.com/drive/folders/1_HbzTVrFoyEy0xAJITJy-oxD6xpaKvYu?usp=drive_link" },
   ];
   return (
     <div className="space-y-3">

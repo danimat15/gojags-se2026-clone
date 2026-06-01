@@ -16,6 +16,9 @@ export const metadata: Metadata = {
     locale: "id_ID",
     type: "website",
   },
+  icons: {
+    icon: "/bps-logo.png",
+  },
 };
 
 export default function RootLayout({

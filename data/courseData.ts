@@ -40,26 +40,26 @@ export const courseData: CourseData = {
       items: [
         {
           id: "item-1-1",
-          title: "Bahan Ajar SE2026",
+          title: "Bahan Ajar",
           type: "link",
           status: "accessible",
-          url: "http://s.bps.go.id/se26petugas",
+          url: "https://drive.google.com/drive/folders/1ok4nqFSHIuSts33LooUbogjy5SVtOH9G?usp=drive_link",
           description: "Bahan ajar lengkap untuk Sensus Ekonomi 2026. Klik tombol di bawah untuk mengakses dokumen.",
         },
         {
           id: "item-1-2",
-          title: "Buku Pedoman SE2026",
+          title: "Panduan",
           type: "link",
           status: "accessible",
-          url: "http://s.bps.go.id/se26petugas",
+          url: "https://drive.google.com/drive/folders/1MifWV2tW0MKPe-05Lz3h1CLqxbgcJQ0U?usp=drive_link",
           description: "Buku pedoman resmi pelaksanaan Sensus Ekonomi 2026.",
         },
         {
           id: "item-1-3",
-          title: "Kuesioner SE2026",
+          title: "Kuesioner",
           type: "link",
           status: "accessible",
-          url: "http://s.bps.go.id/se26petugas",
+          url: "https://drive.google.com/drive/folders/1_HbzTVrFoyEy0xAJITJy-oxD6xpaKvYu?usp=drive_link",
           description: "Kuesioner yang digunakan dalam pendataan SE2026.",
         },
       ],
@@ -110,7 +110,7 @@ export const courseData: CourseData = {
         },
         {
           id: "item-3-4",
-          title: "Kuis Metodologi",
+          title: "Kuis",
           type: "quiz",
           status: "accessible",
           url: QUIZ_URL,
@@ -122,7 +122,7 @@ export const courseData: CourseData = {
     {
       id: "section-4",
       number: 4,
-      title: "SE2026 - Manajemen Lapangan",
+      title: "SE 2026 - Manajemen Lapangan",
       items: [
         {
           id: "item-4-1",
@@ -150,7 +150,7 @@ export const courseData: CourseData = {
         },
         {
           id: "item-4-4",
-          title: "Kuis Manajemen Lapangan",
+          title: "Kuis",
           type: "quiz",
           status: "accessible",
           url: QUIZ_URL,
@@ -162,7 +162,7 @@ export const courseData: CourseData = {
     {
       id: "section-5",
       number: 5,
-      title: "SE 2026 - Fasih Mobile dan Pengolahan",
+      title: "SE 2026 - FASIH Mobile dan Pengolahan",
       items: [
         {
           id: "item-5-1",
@@ -182,7 +182,7 @@ export const courseData: CourseData = {
         },
         {
           id: "item-5-3",
-          title: "Kuis FASIH Mobile dan Pengolahan",
+          title: "Kuis",
           type: "quiz",
           status: "accessible",
           url: QUIZ_URL,
@@ -254,7 +254,7 @@ export const courseData: CourseData = {
         },
         {
           id: "item-6-8",
-          title: "Kuis Instrumen",
+          title: "Kuis",
           type: "quiz",
           status: "accessible",
           url: QUIZ_URL,
@@ -266,7 +266,7 @@ export const courseData: CourseData = {
     {
       id: "section-7",
       number: 7,
-      title: "SE 2026 - Wawancara Probing",
+      title: "SE 2026 - Wawancara dan Probing",
       items: [
         {
           id: "item-7-1",
@@ -286,12 +286,12 @@ export const courseData: CourseData = {
         },
         {
           id: "item-7-3",
-          title: "Kuis Wawancara Probing",
+          title: "Kuis",
           type: "quiz",
           status: "accessible",
           url: QUIZ_URL,
           isExternal: true,
-          description: "Uji pemahaman teknik wawancara probing. Kuis dilakukan di website resmi GoJAGS Classroom.",
+          description: "Uji pemahaman teknik wawancara dan probing. Kuis dilakukan di website resmi GoJAGS Classroom.",
         },
       ],
     },
@@ -310,7 +310,7 @@ export const courseData: CourseData = {
         },
         {
           id: "item-8-2",
-          title: "Kuis Ketidakwajaran Data",
+          title: "Kuis",
           type: "quiz",
           status: "accessible",
           url: QUIZ_URL,

@@ -102,9 +102,12 @@ export default function Navbar({
 
           {/* User badge */}
           <div className="hidden md:flex items-center gap-2 px-2 py-1 rounded-lg bg-gray-100 dark:bg-gray-800">
-            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
-              B
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/bps-logo.png"
+              alt="BPS Logo"
+              className="w-6 h-6 object-contain shrink-0"
+            />
             <span className="text-xs font-medium text-gray-700 dark:text-gray-200 max-w-[180px] truncate">
               BPS Kab. Kepulauan Sangihe
             </span>
@@ -134,9 +137,12 @@ export default function Navbar({
             {mobileMenuOpen && (
               <div className="absolute top-full right-0 mt-1 w-60 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg py-2 z-50">
                 <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-100 dark:border-gray-800 mb-1">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-white text-sm font-bold">
-                    B
-                  </div>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/bps-logo.png"
+                    alt="BPS Logo"
+                    className="w-8 h-8 object-contain"
+                  />
                   <div>
                     <p className="text-xs font-semibold text-gray-900 dark:text-white">
                       BPS Kepulauan Sangihe

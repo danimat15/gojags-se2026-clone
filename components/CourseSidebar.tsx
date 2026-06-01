@@ -1,16 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   ChevronDown,
   Lock,
   Check,
   Video,
-  Link,
+  Link as LinkIcon,
   HelpCircle,
   Award,
   BookOpen,
   ExternalLink,
+  X,
 } from "lucide-react";
 import { CourseData, ContentItem, Section } from "@/data/courseData";
 
@@ -21,12 +23,13 @@ interface CourseSidebarProps {
   isOpen: boolean;
   completedIds: string[];
   progress: number;
+  onClose?: () => void;
 }
 
 function getItemIcon(type: ContentItem["type"]) {
   const base = "w-4 h-4";
   if (type === "video") return <Video className={`${base} text-blue-600 dark:text-blue-400`} />;
-  if (type === "link") return <Link className={`${base} text-orange-600 dark:text-orange-400`} />;
+  if (type === "link") return <LinkIcon className={`${base} text-orange-600 dark:text-orange-400`} />;
   if (type === "quiz") return <HelpCircle className={`${base} text-purple-600 dark:text-purple-400`} />;
   if (type === "award") return <Award className={`${base} text-yellow-600 dark:text-yellow-400`} />;
   return null;
@@ -100,8 +103,9 @@ function SectionAccordion({
             const isDone = completedIds.includes(item.id);
 
             return (
-              <button
+              <Link
                 key={item.id}
+                href={`/course/${item.id}`}
                 onClick={() => onItemSelect(item)}
                 className={`w-full flex items-center gap-2.5 text-left transition-all rounded-none px-3.5 py-2.5 group
                   ${isActive ? "bg-orange-50 dark:bg-orange-900/25" : "hover:bg-gray-50 dark:hover:bg-slate-800/60 cursor-pointer"}
@@ -147,7 +151,7 @@ function SectionAccordion({
                     <div className="w-4 h-4" />
                   )}
                 </div>
-              </button>
+              </Link>
             );
           })}
         </div>
@@ -163,6 +167,7 @@ export default function CourseSidebar({
   isOpen,
   completedIds,
   progress,
+  onClose,
 }: CourseSidebarProps) {
   const totalItems = courseData.sections.reduce(
     (a, s) => a + s.items.length,
@@ -184,9 +189,20 @@ export default function CourseSidebar({
             Konten Kursus
           </h3>
         </div>
-        <span className="ml-auto text-xs text-gray-400">
-          {totalItems} materi
-        </span>
+        <div className="ml-auto flex items-center gap-2">
+          <span className="text-xs text-gray-400">
+            {totalItems} materi
+          </span>
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="lg:hidden p-1 rounded-md text-gray-500 hover:text-orange-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-orange-400 dark:hover:bg-slate-800 transition-colors"
+              title="Tutup sidebar"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Scrollable sections */}
