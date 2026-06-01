@@ -55,38 +55,32 @@ body {
   background: #4b5563;
 }
 
-/* Smooth transitions */
-.transition-sidebar {
-  transition: margin-right 0.3s ease-in-out;
-}
-
-/* YouTube iframe responsive */
-.youtube-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.youtube-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
 /* Gradient brand button */
 .bg-brand {
   background: linear-gradient(135deg, #ea580c, #f97316);
 }
 
-/* Section accordion animation */
-.section-content {
-  overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
-}
-
 /* Progress bar brand gradient */
 .progress-bar-brand {
   background: linear-gradient(90deg, #ea580c, #f97316);
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Smooth transitions */
+.transition-sidebar {
+  transition: margin-right 0.3s ease-in-out;
+}
+
+/* xs breakpoint for tiny screens */
+@media (min-width: 480px) {
+  .xs\:inline {
+    display: inline !important;
+  }
 }

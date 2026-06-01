@@ -3,7 +3,6 @@
 import { useState } from "react";
 import {
   ChevronDown,
-  ChevronRight,
   Lock,
   Check,
   Video,
@@ -11,7 +10,7 @@ import {
   HelpCircle,
   Award,
   BookOpen,
-  Package,
+  ExternalLink,
 } from "lucide-react";
 import { CourseData, ContentItem, Section } from "@/data/courseData";
 
@@ -20,183 +19,133 @@ interface CourseSidebarProps {
   activeItemId: string;
   onItemSelect: (item: ContentItem) => void;
   isOpen: boolean;
-  onToggle: () => void;
+  completedIds: string[];
+  progress: number;
 }
 
-function getItemIcon(type: ContentItem["type"], status: ContentItem["status"]) {
-  const iconClass = "w-4 h-4";
-
-  if (type === "video") {
-    const colorClass =
-      status === "locked"
-        ? "text-blue-600 dark:text-blue-400"
-        : "text-brand-600 dark:text-brand-400";
-    return <Video className={`${iconClass} ${colorClass}`} />;
-  }
-  if (type === "link") {
-    return (
-      <Link className={`${iconClass} text-orange-600 dark:text-orange-400`} />
-    );
-  }
-  if (type === "quiz") {
-    return (
-      <HelpCircle
-        className={`${iconClass} text-purple-600 dark:text-purple-400`}
-      />
-    );
-  }
-  if (type === "award") {
-    return (
-      <Award
-        className={`${iconClass} text-yellow-600 dark:text-yellow-400`}
-      />
-    );
-  }
-  return <Package className={`${iconClass} text-yellow-600`} />;
+function getItemIcon(type: ContentItem["type"]) {
+  const base = "w-4 h-4";
+  if (type === "video") return <Video className={`${base} text-blue-600 dark:text-blue-400`} />;
+  if (type === "link") return <Link className={`${base} text-orange-600 dark:text-orange-400`} />;
+  if (type === "quiz") return <HelpCircle className={`${base} text-purple-600 dark:text-purple-400`} />;
+  if (type === "award") return <Award className={`${base} text-yellow-600 dark:text-yellow-400`} />;
+  return null;
 }
 
-function getItemBgColor(type: ContentItem["type"]) {
-  if (type === "video")
-    return "bg-blue-100 dark:bg-blue-900/30";
-  if (type === "link")
-    return "bg-orange-100 dark:bg-orange-900/30";
-  if (type === "quiz")
-    return "bg-purple-100 dark:bg-purple-900/30";
-  if (type === "award")
-    return "bg-yellow-100 dark:bg-yellow-900/30";
+function getItemBg(type: ContentItem["type"], isActive: boolean) {
+  if (isActive) return "bg-orange-100 dark:bg-orange-900/30";
+  if (type === "video") return "bg-blue-100 dark:bg-blue-900/30";
+  if (type === "link") return "bg-orange-100 dark:bg-orange-900/30";
+  if (type === "quiz") return "bg-purple-100 dark:bg-purple-900/30";
+  if (type === "award") return "bg-yellow-100 dark:bg-yellow-900/30";
   return "bg-gray-100 dark:bg-gray-800";
-}
-
-function StatusIndicator({ status }: { status: ContentItem["status"] }) {
-  if (status === "completed") {
-    return (
-      <div className="w-4 h-4 rounded-full bg-green-200 dark:bg-green-900/40 flex items-center justify-center flex-shrink-0">
-        <Check className="w-3 h-3 text-green-600 dark:text-green-400 stroke-[3]" />
-      </div>
-    );
-  }
-  if (status === "locked") {
-    return (
-      <Lock className="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0 stroke-[3]" />
-    );
-  }
-  if (status === "current") {
-    return (
-      <div className="w-4 h-4 rounded-full bg-brand-500 flex items-center justify-center flex-shrink-0">
-        <div className="w-2 h-2 rounded-full bg-white" />
-      </div>
-    );
-  }
-  return <div className="w-4 h-4 flex-shrink-0" />;
 }
 
 function SectionAccordion({
   section,
   activeItemId,
   onItemSelect,
+  completedIds,
   defaultOpen,
 }: {
   section: Section;
   activeItemId: string;
   onItemSelect: (item: ContentItem) => void;
+  completedIds: string[];
   defaultOpen: boolean;
 }) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const hasActive = section.items.some((i) => i.id === activeItemId);
+  const [open, setOpen] = useState(defaultOpen || hasActive);
 
-  const hasActiveItem = section.items.some((item) => item.id === activeItemId);
+  const completedInSection = section.items.filter((i) =>
+    completedIds.includes(i.id)
+  ).length;
 
   return (
     <div className="bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-gray-200 dark:border-slate-800">
-      {/* Section header */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors duration-200"
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-3.5 py-3 hover:bg-gray-50 dark:hover:bg-slate-800/60 transition-colors"
       >
-        <div className="flex items-center gap-3 flex-1 min-w-0">
+        <div className="flex items-center gap-2.5 flex-1 min-w-0">
           <div
-            className={`rounded-md border-2 flex items-center justify-center flex-shrink-0 w-8 h-8 ${
-              hasActiveItem
-                ? "border-brand-600 dark:border-brand-400 bg-brand-50 dark:bg-brand-900/20"
-                : "border-brand-600 dark:border-brand-400"
+            className={`w-7 h-7 rounded-lg border-2 flex items-center justify-center flex-shrink-0 text-xs font-bold ${
+              hasActive
+                ? "border-orange-600 bg-orange-50 text-orange-600 dark:border-orange-400 dark:bg-orange-900/20 dark:text-orange-400"
+                : "border-orange-500 text-orange-600 dark:border-orange-400 dark:text-orange-400"
             }`}
           >
-            <span className="text-brand-600 dark:text-brand-400 font-semibold text-sm">
-              {section.number}
-            </span>
+            {section.number}
           </div>
           <div className="text-left flex-1 min-w-0">
-            <h4 className="font-semibold text-gray-900 dark:text-white truncate text-sm">
+            <h4 className="text-xs font-semibold text-gray-900 dark:text-white truncate leading-tight">
               {section.title}
             </h4>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-              {section.items.length} materi
+            <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">
+              {completedInSection}/{section.items.length} selesai
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-3 flex-shrink-0">
-          <ChevronDown
-            className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
-              isOpen ? "rotate-180" : ""
-            }`}
-          />
-        </div>
+        <ChevronDown
+          className={`w-3.5 h-3.5 text-gray-400 flex-shrink-0 transition-transform duration-200 ${
+            open ? "rotate-180" : ""
+          }`}
+        />
       </button>
 
-      {/* Section items */}
-      {isOpen && (
+      {open && (
         <div className="border-t border-gray-100 dark:border-slate-800">
           {section.items.map((item) => {
             const isActive = item.id === activeItemId;
-            const isLocked = item.status === "locked";
+            const isDone = completedIds.includes(item.id);
 
             return (
               <button
                 key={item.id}
-                onClick={() => !isLocked && onItemSelect(item)}
-                disabled={isLocked}
-                className={`w-full flex items-center gap-3 transition-all rounded-none pr-4 pl-8 py-3 text-left group
-                  ${isActive ? "bg-brand-50 dark:bg-brand-900/30" : ""}
-                  ${
-                    isLocked
-                      ? "cursor-not-allowed opacity-60"
-                      : "hover:bg-gray-100 dark:hover:bg-slate-800 cursor-pointer"
-                  }
+                onClick={() => onItemSelect(item)}
+                className={`w-full flex items-center gap-2.5 text-left transition-all rounded-none px-3.5 py-2.5 group
+                  ${isActive ? "bg-orange-50 dark:bg-orange-900/25" : "hover:bg-gray-50 dark:hover:bg-slate-800/60 cursor-pointer"}
                 `}
               >
-                {/* Item icon */}
-                <div className="flex-shrink-0">
-                  <div
-                    className={`w-8 h-8 rounded-md flex items-center justify-center flex-shrink-0 ${
-                      isActive
-                        ? "bg-brand-100 dark:bg-brand-900/30"
-                        : getItemBgColor(item.type)
-                    }`}
-                  >
-                    {getItemIcon(
-                      item.type,
-                      isActive ? "current" : item.status
-                    )}
-                  </div>
+                {/* icon */}
+                <div
+                  className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${getItemBg(
+                    item.type,
+                    isActive
+                  )}`}
+                >
+                  {getItemIcon(item.type)}
                 </div>
 
-                {/* Item title */}
+                {/* title */}
                 <div className="flex-1 min-w-0">
-                  <h4
-                    className={`font-medium truncate text-sm ${
+                  <p
+                    className={`text-xs font-medium leading-snug line-clamp-2 ${
                       isActive
-                        ? "text-brand-900 dark:text-brand-100"
-                        : "text-gray-900 dark:text-white"
+                        ? "text-orange-800 dark:text-orange-200"
+                        : "text-gray-800 dark:text-gray-200"
                     }`}
                   >
                     {item.title}
-                  </h4>
+                  </p>
+                  {item.isExternal && (
+                    <span className="flex items-center gap-0.5 text-[10px] text-gray-400 mt-0.5">
+                      <ExternalLink className="w-2.5 h-2.5" /> Site resmi
+                    </span>
+                  )}
                 </div>
 
-                {/* Status indicator */}
+                {/* status */}
                 <div className="flex-shrink-0">
-                  <StatusIndicator
-                    status={isActive ? "current" : item.status}
-                  />
+                  {isDone ? (
+                    <div className="w-4 h-4 rounded-full bg-green-200 dark:bg-green-900/40 flex items-center justify-center">
+                      <Check className="w-2.5 h-2.5 text-green-600 dark:text-green-400 stroke-[3]" />
+                    </div>
+                  ) : isActive ? (
+                    <div className="w-2 h-2 rounded-full bg-orange-500" />
+                  ) : (
+                    <div className="w-4 h-4" />
+                  )}
                 </div>
               </button>
             );
@@ -212,105 +161,88 @@ export default function CourseSidebar({
   activeItemId,
   onItemSelect,
   isOpen,
-  onToggle,
+  completedIds,
+  progress,
 }: CourseSidebarProps) {
-  return (
-    <>
-      {/* Sidebar toggle button */}
-      <div
-        className={`fixed top-1/2 -translate-y-1/2 z-50 transition-all duration-300 ${
-          isOpen ? "right-[400px]" : "right-0"
-        }`}
-      >
-        <button
-          onClick={onToggle}
-          className="w-5 h-24 bg-gradient-to-r from-brand-600 to-brand-700 border-0 rounded-l-xl shadow-[-4px_0_16px_rgba(234,88,12,0.3)] flex items-center justify-center transition-all duration-300 hover:w-6 hover:from-brand-700 hover:to-brand-800 active:scale-95"
-          title={isOpen ? "Tutup sidebar" : "Buka sidebar"}
-        >
-          {isOpen ? (
-            <ChevronRight className="w-4 h-4 text-white" />
-          ) : (
-            <ChevronDown className="w-4 h-4 text-white -rotate-90" />
-          )}
-        </button>
-      </div>
+  const totalItems = courseData.sections.reduce(
+    (a, s) => a + s.items.length,
+    0
+  );
 
-      {/* Sidebar panel */}
-      <div
-        className={`fixed top-12 right-0 bottom-0 w-full sm:w-[400px] bg-white dark:bg-slate-950 border-l border-gray-200 dark:border-slate-800 flex flex-col z-40 transition-transform duration-300 shadow-xl ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        {/* Header */}
-        <div className="flex-shrink-0 h-14 border-b border-gray-200 dark:border-slate-800 px-4 flex items-center justify-between bg-white dark:bg-slate-950">
-          <h3 className="font-semibold text-base text-gray-900 dark:text-white px-2">
+  return (
+    <aside
+      className={`fixed top-12 right-0 bottom-0 z-40 flex flex-col bg-white dark:bg-slate-950 border-l border-gray-200 dark:border-slate-800 shadow-xl transition-transform duration-300 ease-in-out
+        w-full sm:w-80 lg:w-[380px]
+        ${isOpen ? "translate-x-0" : "translate-x-full"}
+      `}
+    >
+      {/* Header */}
+      <div className="flex-shrink-0 h-11 border-b border-gray-200 dark:border-slate-800 px-4 flex items-center bg-white dark:bg-slate-950">
+        <div className="flex items-center gap-2">
+          <BookOpen className="w-4 h-4 text-orange-600" />
+          <h3 className="font-semibold text-sm text-gray-900 dark:text-white">
             Konten Kursus
           </h3>
-          <button
-            onClick={onToggle}
-            className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors sm:hidden"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
         </div>
+        <span className="ml-auto text-xs text-gray-400">
+          {totalItems} materi
+        </span>
+      </div>
 
-        {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar">
-          <div className="p-4 space-y-3">
-            {/* Curriculum overview card */}
-            <div className="border border-gray-200 dark:border-slate-700 rounded-xl overflow-hidden bg-gradient-to-br from-brand-50 to-orange-50 dark:from-slate-800 dark:to-slate-900">
-              <div className="flex items-center gap-3 px-4 py-4">
-                <div className="w-9 h-9 rounded-lg bg-brand-600 flex items-center justify-center flex-shrink-0">
-                  <BookOpen className="w-4 h-4 text-white" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-sm text-gray-900 dark:text-white">
-                    Kurikulum Kursus
-                  </h4>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
-                    {courseData.totalSections} bagian •{" "}
-                    {courseData.sections.reduce(
-                      (acc, s) => acc + s.items.length,
-                      0
-                    )}{" "}
-                    materi
-                  </p>
-                </div>
+      {/* Scrollable sections */}
+      <div className="flex-1 overflow-y-auto custom-scrollbar">
+        <div className="p-3 space-y-2">
+          {/* Curriculum card */}
+          <div className="rounded-xl overflow-hidden bg-gradient-to-br from-orange-50 to-amber-50 dark:from-slate-800 dark:to-slate-900 border border-orange-100 dark:border-slate-700">
+            <div className="flex items-center gap-3 px-3.5 py-3">
+              <div className="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center flex-shrink-0">
+                <BookOpen className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="font-bold text-xs text-gray-900 dark:text-white">
+                  Kurikulum Kursus
+                </p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">
+                  {courseData.totalSections} bagian · {totalItems} materi
+                </p>
               </div>
             </div>
-
-            {/* Section accordions */}
-            {courseData.sections.map((section, index) => (
-              <SectionAccordion
-                key={section.id}
-                section={section}
-                activeItemId={activeItemId}
-                onItemSelect={onItemSelect}
-                defaultOpen={index < 3}
-              />
-            ))}
           </div>
-        </div>
 
-        {/* Progress footer */}
-        <div className="flex-shrink-0 border-t border-gray-200 dark:border-slate-800 px-5 py-4 bg-gray-50 dark:bg-slate-950">
-          <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400 mb-2">
-            <span className="font-medium">Progres Anda</span>
-            <span className="font-bold text-brand-600 dark:text-brand-400">
-              {courseData.progress}%
-            </span>
-          </div>
-          <div className="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
-            <div
-              className="progress-bar-brand h-2 rounded-full transition-all duration-500"
-              style={{ width: `${courseData.progress}%` }}
+          {/* Sections */}
+          {courseData.sections.map((section, idx) => (
+            <SectionAccordion
+              key={section.id}
+              section={section}
+              activeItemId={activeItemId}
+              onItemSelect={onItemSelect}
+              completedIds={completedIds}
+              defaultOpen={idx < 2}
             />
-          </div>
-          <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
-            Selesaikan semua materi untuk mendapatkan sertifikat
-          </p>
+          ))}
         </div>
       </div>
-    </>
+
+      {/* Progress footer */}
+      <div className="flex-shrink-0 border-t border-gray-200 dark:border-slate-800 px-4 py-3 bg-gray-50 dark:bg-slate-950">
+        <div className="flex items-center justify-between text-xs mb-1.5">
+          <span className="font-medium text-gray-600 dark:text-gray-400">
+            Progres Anda
+          </span>
+          <span className="font-extrabold text-orange-600 dark:text-orange-400">
+            {progress}%
+          </span>
+        </div>
+        <div className="w-full h-2 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+          <div
+            className="progress-bar-brand h-full rounded-full transition-all duration-500"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-2">
+          Selesaikan semua materi untuk mendapat sertifikat
+        </p>
+      </div>
+    </aside>
   );
 }
