@@ -1,21 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import {
   BookOpen,
   Video,
   FileText,
   HelpCircle,
   Award,
-  ArrowRight,
+  ArrowDown,
   AlertTriangle,
   ExternalLink,
-  ChevronRight,
   ChevronDown,
   BarChart3,
-  Users,
-  Clock,
   CheckCircle2,
   Play,
 } from "lucide-react";
@@ -25,9 +21,7 @@ const stats = [
   { label: "Bagian Kursus", value: "9", icon: BookOpen, color: "bg-blue-500" },
   {
     label: "Total Materi",
-    value: String(
-      courseData.sections.reduce((a, s) => a + s.items.length, 0)
-    ),
+    value: String(courseData.sections.reduce((a, s) => a + s.items.length, 0)),
     icon: Video,
     color: "bg-orange-500",
   },
@@ -55,24 +49,24 @@ const typeBadge = (type: string) => {
   return "";
 };
 
-export default function LandingPage() {
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    "section-1": true,
-    "section-2": true,
-  });
+function scrollToKurikulum() {
+  document.getElementById("kurikulum")?.scrollIntoView({ behavior: "smooth" });
+}
 
-  const toggleSection = (id: string) => {
-    setExpandedSections((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
+export default function LandingPage() {
+  const [expandedSections, setExpandedSections] = useState<
+    Record<string, boolean>
+  >({ "section-1": true, "section-2": true });
+
+  const toggleSection = (id: string) =>
+    setExpandedSections((prev) => ({ ...prev, [id]: !prev[id] }));
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
       {/* ── Navbar ── */}
       <header className="fixed top-0 inset-x-0 z-50 h-14 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-b border-gray-200 dark:border-slate-800 shadow-sm">
         <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 flex items-center justify-between gap-4">
+          {/* Logo */}
           <div className="flex items-center gap-2.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -93,6 +87,7 @@ export default function LandingPage() {
             </div>
           </div>
 
+          {/* Right actions */}
           <div className="flex items-center gap-3">
             <a
               href="https://gojags-classroom.bps.go.id/"
@@ -103,14 +98,15 @@ export default function LandingPage() {
               <ExternalLink className="w-3.5 h-3.5" />
               Situs Resmi
             </a>
-            <Link
-              href="/course"
+            {/* ← scroll to #kurikulum, bukan navigate ke /course */}
+            <button
+              onClick={scrollToKurikulum}
               className="flex items-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold rounded-xl transition-colors shadow-sm"
             >
-              <Play className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Mulai Belajar</span>
-              <span className="sm:hidden">Belajar</span>
-            </Link>
+              <BookOpen className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Lihat Materi</span>
+              <span className="sm:hidden">Materi</span>
+            </button>
           </div>
         </div>
       </header>
@@ -118,25 +114,22 @@ export default function LandingPage() {
       {/* ── Hero ── */}
       <section className="pt-14">
         <div className="relative overflow-hidden bg-gradient-to-br from-orange-600 via-orange-500 to-amber-500">
-          {/* decorative circles */}
           <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-white/10 pointer-events-none" />
           <div className="absolute bottom-0 -left-16 w-64 h-64 rounded-full bg-black/10 pointer-events-none" />
 
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center">
-            {/* badge */}
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-semibold mb-6 border border-white/30">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/bps-logo.png" alt="BPS Logo" className="w-3.5 h-3.5 object-contain" />
+              <BarChart3 className="w-3.5 h-3.5" />
               BPS Kabupaten Kepulauan Sangihe
             </span>
 
+            {/* Judul — hanya teks, tidak ada link navigasi */}
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-4">
-              <Link href="/course" className="hover:text-orange-100 transition-colors">
-                MOOC Pelatihan Petugas
-                <br className="hidden sm:block" />
-                <span className="text-white/90"> Sensus Ekonomi 2026</span>
-              </Link>
+              MOOC Pelatihan Petugas
+              <br className="hidden sm:block" />
+              <span className="text-white/90"> Sensus Ekonomi 2026</span>
             </h1>
+
             <p className="text-white/80 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed mb-8">
               Platform belajar mandiri untuk petugas SE2026 BPS Kabupaten
               Kepulauan Sangihe. Akses semua materi video, buku pedoman, dan
@@ -144,14 +137,16 @@ export default function LandingPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-              <Link
-                href="/course"
+              {/* ← scroll ke #kurikulum */}
+              <button
+                onClick={scrollToKurikulum}
                 className="group flex items-center gap-2 px-7 py-3.5 bg-white text-orange-700 font-bold rounded-2xl shadow-lg hover:shadow-xl hover:bg-orange-50 transition-all duration-200 w-full sm:w-auto justify-center"
               >
-                <Play className="w-5 h-5" />
-                Mulai Belajar Sekarang
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
+                <BookOpen className="w-5 h-5" />
+                Lihat Kurikulum Kursus
+                <ArrowDown className="w-4 h-4 group-hover:translate-y-1 transition-transform" />
+              </button>
+
               <a
                 href="https://gojags-classroom.bps.go.id/my-course"
                 target="_blank"
@@ -224,16 +219,13 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── About Clone ── */}
+      {/* ── About ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 mt-8">
         <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 sm:p-8 border border-gray-100 dark:border-slate-700 shadow-sm">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-8">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/bps-logo.png"
-              alt="BPS Logo"
-              className="w-16 h-16 object-contain flex-shrink-0 animate-bounce-subtle"
-            />
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center shadow-lg flex-shrink-0">
+              <BarChart3 className="w-8 h-8 text-white" />
+            </div>
             <div className="flex-1">
               <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-2">
                 Tentang Platform Ini
@@ -268,19 +260,19 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Course Curriculum ── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 mt-8 mb-16">
+      {/* ── Kurikulum Kursus ── id="kurikulum" untuk scroll target */}
+      <section
+        id="kurikulum"
+        className="max-w-7xl mx-auto px-4 sm:px-6 mt-8 mb-16 scroll-mt-20"
+      >
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
             Kurikulum Kursus
           </h2>
-          <Link
-            href="/course"
-            className="flex items-center gap-1.5 text-sm text-orange-600 dark:text-orange-400 hover:underline font-semibold"
-          >
-            Lihat semua
-            <ChevronRight className="w-4 h-4" />
-          </Link>
+          <span className="text-xs text-gray-400 dark:text-gray-500">
+            {courseData.totalSections} bagian ·{" "}
+            {courseData.sections.reduce((a, s) => a + s.items.length, 0)} materi
+          </span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -289,35 +281,27 @@ export default function LandingPage() {
             return (
               <div
                 key={section.id}
-                className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden transition-all duration-300"
+                className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden"
               >
-                {/* Section header */}
+                {/* Section header — klik untuk expand/collapse */}
                 <div
                   onClick={() => toggleSection(section.id)}
-                  className="group/sec flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-slate-700 bg-gradient-to-r from-orange-50 to-white dark:from-orange-900/10 dark:to-slate-800 hover:from-orange-100/50 hover:to-orange-50/10 dark:hover:from-orange-900/20 dark:hover:to-slate-800/80 transition-all cursor-pointer select-none"
+                  className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-slate-700 bg-gradient-to-r from-orange-50 to-white dark:from-orange-900/10 dark:to-slate-800 hover:from-orange-100/50 dark:hover:from-orange-900/20 transition-all cursor-pointer select-none"
                 >
                   <div className="flex items-center gap-3 min-w-0 flex-1">
-                    <div className="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center flex-shrink-0 group-hover/sec:scale-105 transition-transform">
+                    <div className="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center flex-shrink-0">
                       <span className="text-orange-700 dark:text-orange-400 font-bold text-sm">
                         {section.number}
                       </span>
                     </div>
-                    <h3 className="font-bold text-sm text-gray-900 dark:text-white flex-1 min-w-0 truncate group-hover/sec:text-orange-600 dark:group-hover/sec:text-orange-400 transition-colors">
+                    <h3 className="font-bold text-sm text-gray-900 dark:text-white flex-1 min-w-0 truncate">
                       {section.title}
                     </h3>
                   </div>
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                  <div className="flex items-center gap-2.5 flex-shrink-0">
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
                       {section.items.length} materi
                     </span>
-                    <Link
-                      href={`/course/${section.items[0].id}`}
-                      onClick={(e) => e.stopPropagation()}
-                      className="p-1 rounded-md hover:bg-orange-100 dark:hover:bg-orange-900/40 text-orange-600 dark:text-orange-400 hover:scale-105 transition-all"
-                      title="Mulai bagian ini"
-                    >
-                      <ChevronRight className="w-4 h-4" />
-                    </Link>
                     <ChevronDown
                       className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
                         isExpanded ? "rotate-180" : ""
@@ -326,39 +310,41 @@ export default function LandingPage() {
                   </div>
                 </div>
 
-                {/* Items */}
+                {/* Items — hanya tampilan, tidak ada link navigasi */}
                 {isExpanded && (
                   <ul className="divide-y divide-gray-50 dark:divide-slate-700/50">
                     {section.items.map((item) => (
                       <li
                         key={item.id}
-                        className="group/item flex items-center gap-3 px-5 py-3 hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors"
+                        className="flex items-center gap-3 px-5 py-3"
                       >
-                        <Link
-                          href={`/course/${item.id}`}
-                          className="flex items-center gap-3 w-full min-w-0"
+                        <span
+                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold flex-shrink-0 ${typeBadge(item.type)}`}
                         >
-                          <span
-                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold flex-shrink-0 ${typeBadge(item.type)}`}
+                          {typeIcon(item.type)}
+                          {item.type === "video"
+                            ? "Video"
+                            : item.type === "link"
+                            ? "Dokumen"
+                            : item.type === "quiz"
+                            ? "Kuis"
+                            : "Sertifikat"}
+                        </span>
+                        <span className="text-xs text-gray-700 dark:text-gray-300 flex-1 min-w-0 truncate">
+                          {item.title}
+                        </span>
+                        {item.isExternal && (
+                          <a
+                            href={item.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            title="Buka di site resmi"
+                            className="flex-shrink-0 text-gray-400 hover:text-orange-500 transition-colors"
                           >
-                            {typeIcon(item.type)}
-                            {item.type === "video"
-                              ? "Video"
-                              : item.type === "link"
-                              ? "Dokumen"
-                              : item.type === "quiz"
-                              ? "Kuis"
-                              : "Sertifikat"}
-                          </span>
-                          <span className="text-xs text-gray-700 dark:text-gray-300 flex-1 min-w-0 truncate group-hover/item:text-orange-600 dark:group-hover/item:text-orange-400 transition-colors">
-                            {item.title}
-                          </span>
-                          {item.isExternal ? (
-                            <ExternalLink className="w-3 h-3 text-gray-400 flex-shrink-0" />
-                          ) : (
-                            <ChevronRight className="w-3 h-3 text-gray-400 opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-0.5 transition-all flex-shrink-0" />
-                          )}
-                        </Link>
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -374,12 +360,9 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/bps-logo.png"
-                alt="BPS Logo"
-                className="w-10 h-10 object-contain"
-              />
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center">
+                <BarChart3 className="w-5 h-5 text-white" />
+              </div>
               <div>
                 <p className="font-bold text-gray-900 dark:text-white text-sm">
                   BPS Kabupaten Kepulauan Sangihe
@@ -406,12 +389,13 @@ export default function LandingPage() {
               >
                 <ExternalLink className="w-3 h-3" /> BPS Indonesia
               </a>
-              <Link
-                href="/course"
-                className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
+              {/* ← scroll ke kurikulum, bukan navigate */}
+              <button
+                onClick={scrollToKurikulum}
+                className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors text-left"
               >
-                Belajar Sekarang
-              </Link>
+                Lihat Kurikulum
+              </button>
             </div>
           </div>
           <div className="mt-6 pt-6 border-t border-gray-100 dark:border-slate-800 text-center">
@@ -425,7 +409,7 @@ export default function LandingPage() {
               >
                 gojags-classroom.bps.go.id
               </a>{" "}
-              • Dibuat untuk BPS Kab. Kepulauan Sangihe • SE2026 • Dikembangkan oleh <a href="https://hamdani-portfolio.vercel.app/" target="_blank" rel="noreferrer" className="text-orange-500 hover:underline font-semibold">Hamdani</a>
+              • Dibuat untuk BPS Kab. Kepulauan Sangihe • SE2026
             </p>
           </div>
         </div>
