@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   ChevronDown,
@@ -58,11 +58,18 @@ function SectionAccordion({
   defaultOpen: boolean;
 }) {
   const hasActive = section.items.some((i) => i.id === activeItemId);
-  const [open, setOpen] = useState(defaultOpen || hasActive);
+  const [open, setOpen] = useState(false);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     if (hasActive) {
-      setOpen(true);
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+      } else {
+        setOpen(true);
+      }
+    } else {
+      setOpen(false);
     }
   }, [hasActive]);
 
@@ -70,24 +77,37 @@ function SectionAccordion({
     completedIds.includes(i.id)
   ).length;
 
+  const handleHeaderClick = () => {
+    if (hasActive) {
+      setOpen(!open);
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-gray-200 dark:border-slate-800">
       <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-3.5 py-3 hover:bg-gray-50 dark:hover:bg-slate-800/60 transition-colors"
+        onClick={handleHeaderClick}
+        disabled={!hasActive}
+        className={`w-full flex items-center justify-between px-3.5 py-3 transition-colors ${
+          hasActive
+            ? "hover:bg-gray-50 dark:hover:bg-slate-800/60 cursor-pointer"
+            : "cursor-not-allowed opacity-60 bg-gray-50/20 dark:bg-slate-900/10"
+        }`}
       >
         <div className="flex items-center gap-2.5 flex-1 min-w-0">
           <div
             className={`w-7 h-7 rounded-lg border-2 flex items-center justify-center flex-shrink-0 text-xs font-bold ${
               hasActive
                 ? "border-orange-600 bg-orange-50 text-orange-600 dark:border-orange-400 dark:bg-orange-900/20 dark:text-orange-400"
-                : "border-orange-500 text-orange-600 dark:border-orange-400 dark:text-orange-400"
+                : "border-gray-300 text-gray-400 dark:border-slate-700 dark:text-gray-500"
             }`}
           >
             {section.number}
           </div>
           <div className="text-left flex-1 min-w-0">
-            <h4 className="text-xs font-semibold text-gray-900 dark:text-white truncate leading-tight">
+            <h4 className={`text-xs font-semibold truncate leading-tight ${
+              hasActive ? "text-gray-900 dark:text-white" : "text-gray-400 dark:text-gray-500"
+            }`}>
               {section.title}
             </h4>
             <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">
@@ -95,11 +115,15 @@ function SectionAccordion({
             </p>
           </div>
         </div>
-        <ChevronDown
-          className={`w-3.5 h-3.5 text-gray-400 flex-shrink-0 transition-transform duration-200 ${
-            open ? "rotate-180" : ""
-          }`}
-        />
+        {hasActive ? (
+          <ChevronDown
+            className={`w-3.5 h-3.5 text-gray-400 flex-shrink-0 transition-transform duration-200 ${
+              open ? "rotate-180" : ""
+            }`}
+          />
+        ) : (
+          <Lock className="w-3.5 h-3.5 text-gray-400/50 flex-shrink-0" />
+        )}
       </button>
 
       {open && (
