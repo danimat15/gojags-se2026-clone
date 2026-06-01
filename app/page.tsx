@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+
 import {
   BookOpen,
   Video,
@@ -11,11 +11,7 @@ import {
   ArrowRight,
   AlertTriangle,
   ExternalLink,
-  ChevronRight,
   ChevronDown,
-  BarChart3,
-  Users,
-  Clock,
   CheckCircle2,
   Play,
 } from "lucide-react";
@@ -103,14 +99,14 @@ export default function LandingPage() {
               <ExternalLink className="w-3.5 h-3.5" />
               Situs Resmi
             </a>
-            <Link
-              href="/course"
+            <a
+              href="#kurikulum"
               className="flex items-center gap-2 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold rounded-xl transition-colors shadow-sm"
             >
               <Play className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Mulai Belajar</span>
               <span className="sm:hidden">Belajar</span>
-            </Link>
+            </a>
           </div>
         </div>
       </header>
@@ -131,11 +127,11 @@ export default function LandingPage() {
             </span>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-4">
-              <Link href="/course" className="hover:text-orange-100 transition-colors">
+              <a href="#kurikulum" className="hover:text-orange-100 transition-colors">
                 MOOC Pelatihan Petugas
                 <br className="hidden sm:block" />
                 <span className="text-white/90"> Sensus Ekonomi 2026</span>
-              </Link>
+              </a>
             </h1>
             <p className="text-white/80 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed mb-8">
               Platform belajar mandiri untuk petugas SE2026 BPS Kabupaten
@@ -144,14 +140,14 @@ export default function LandingPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-              <Link
-                href="/course"
+              <a
+                href="#kurikulum"
                 className="group flex items-center gap-2 px-7 py-3.5 bg-white text-orange-700 font-bold rounded-2xl shadow-lg hover:shadow-xl hover:bg-orange-50 transition-all duration-200 w-full sm:w-auto justify-center"
               >
                 <Play className="w-5 h-5" />
                 Mulai Belajar Sekarang
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
+              </a>
               <a
                 href="https://gojags-classroom.bps.go.id/my-course"
                 target="_blank"
@@ -269,18 +265,11 @@ export default function LandingPage() {
       </section>
 
       {/* ── Course Curriculum ── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 mt-8 mb-16">
+      <section id="kurikulum" className="max-w-7xl mx-auto px-4 sm:px-6 mt-8 mb-16 scroll-mt-20">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
             Kurikulum Kursus
           </h2>
-          <Link
-            href="/course"
-            className="flex items-center gap-1.5 text-sm text-orange-600 dark:text-orange-400 hover:underline font-semibold"
-          >
-            Lihat semua
-            <ChevronRight className="w-4 h-4" />
-          </Link>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -310,14 +299,6 @@ export default function LandingPage() {
                     <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
                       {section.items.length} materi
                     </span>
-                    <Link
-                      href={`/course/${section.items[0].id}`}
-                      onClick={(e) => e.stopPropagation()}
-                      className="p-1 rounded-md hover:bg-orange-100 dark:hover:bg-orange-900/40 text-orange-600 dark:text-orange-400 hover:scale-105 transition-all"
-                      title="Mulai bagian ini"
-                    >
-                      <ChevronRight className="w-4 h-4" />
-                    </Link>
                     <ChevronDown
                       className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
                         isExpanded ? "rotate-180" : ""
@@ -334,10 +315,7 @@ export default function LandingPage() {
                         key={item.id}
                         className="group/item flex items-center gap-3 px-5 py-3 hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors"
                       >
-                        <Link
-                          href={`/course/${item.id}`}
-                          className="flex items-center gap-3 w-full min-w-0"
-                        >
+                        <div className="flex items-center gap-3 w-full min-w-0">
                           <span
                             className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold flex-shrink-0 ${typeBadge(item.type)}`}
                           >
@@ -350,15 +328,13 @@ export default function LandingPage() {
                               ? "Kuis"
                               : "Sertifikat"}
                           </span>
-                          <span className="text-xs text-gray-700 dark:text-gray-300 flex-1 min-w-0 truncate group-hover/item:text-orange-600 dark:group-hover/item:text-orange-400 transition-colors">
+                          <span className="text-xs text-gray-700 dark:text-gray-300 flex-1 min-w-0 truncate">
                             {item.title}
                           </span>
-                          {item.isExternal ? (
+                          {item.isExternal && (
                             <ExternalLink className="w-3 h-3 text-gray-400 flex-shrink-0" />
-                          ) : (
-                            <ChevronRight className="w-3 h-3 text-gray-400 opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-0.5 transition-all flex-shrink-0" />
                           )}
-                        </Link>
+                        </div>
                       </li>
                     ))}
                   </ul>
@@ -406,12 +382,12 @@ export default function LandingPage() {
               >
                 <ExternalLink className="w-3 h-3" /> BPS Indonesia
               </a>
-              <Link
-                href="/course"
+              <a
+                href="#kurikulum"
                 className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
               >
                 Belajar Sekarang
-              </Link>
+              </a>
             </div>
           </div>
           <div className="mt-6 pt-6 border-t border-gray-100 dark:border-slate-800 text-center">
