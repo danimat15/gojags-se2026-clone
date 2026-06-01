@@ -75,7 +75,7 @@ export default function CoursePage({ params }: PageProps) {
   const router = useRouter();
   const [isDark, setIsDark] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const activeItemId = resolvedParams.itemId?.[0] || "item-2-1";
+  const activeItemId = resolvedParams.itemId?.[0] || "item-1-1";
   const [activeTab, setActiveTab] = useState<TabKey>("informasi");
   const { completedIds, toggle } = useCompletedItems();
 

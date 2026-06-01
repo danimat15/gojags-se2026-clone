@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   ChevronDown,
@@ -59,6 +59,12 @@ function SectionAccordion({
 }) {
   const hasActive = section.items.some((i) => i.id === activeItemId);
   const [open, setOpen] = useState(defaultOpen || hasActive);
+
+  useEffect(() => {
+    if (hasActive) {
+      setOpen(true);
+    }
+  }, [hasActive]);
 
   const completedInSection = section.items.filter((i) =>
     completedIds.includes(i.id)
