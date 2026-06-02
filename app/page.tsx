@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 import {
   BookOpen,
@@ -310,12 +311,14 @@ export default function LandingPage() {
                 {/* Items */}
                 {isExpanded && (
                   <ul className="divide-y divide-gray-50 dark:divide-slate-700/50">
-                    {section.items.map((item) => (
-                      <li
-                        key={item.id}
-                        className="group/item flex items-center gap-3 px-5 py-3 hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors"
-                      >
-                        <div className="flex items-center gap-3 w-full min-w-0">
+                    {section.items.map((item) => {
+                      const isExternal = item.type === "quiz" || item.type === "award";
+                      const href = isExternal
+                        ? (item.url || "https://gojags-classroom.bps.go.id/my-course")
+                        : `/course/${item.id}`;
+
+                      const content = (
+                        <>
                           <span
                             className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold flex-shrink-0 ${typeBadge(item.type)}`}
                           >
@@ -328,15 +331,40 @@ export default function LandingPage() {
                               ? "Kuis"
                               : "Sertifikat"}
                           </span>
-                          <span className="text-xs text-gray-700 dark:text-gray-300 flex-1 min-w-0 truncate">
+                          <span className="text-xs text-gray-700 dark:text-gray-300 flex-1 min-w-0 truncate group-hover/item:text-orange-600 dark:group-hover/item:text-orange-400 transition-colors">
                             {item.title}
                           </span>
-                          {item.isExternal && (
-                            <ExternalLink className="w-3 h-3 text-gray-400 flex-shrink-0" />
+                          {isExternal && (
+                            <ExternalLink className="w-3 h-3 text-gray-400 opacity-0 group-hover/item:opacity-100 transition-opacity flex-shrink-0" />
                           )}
-                        </div>
-                      </li>
-                    ))}
+                        </>
+                      );
+
+                      return (
+                        <li
+                          key={item.id}
+                          className="group/item flex items-center gap-3 px-5 py-3 hover:bg-orange-50 dark:hover:bg-slate-700/30 transition-colors"
+                        >
+                          {isExternal ? (
+                            <a
+                              href={href}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="flex items-center gap-3 w-full min-w-0"
+                            >
+                              {content}
+                            </a>
+                          ) : (
+                            <Link
+                              href={href}
+                              className="flex items-center gap-3 w-full min-w-0"
+                            >
+                              {content}
+                            </Link>
+                          )}
+                        </li>
+                      );
+                    })}
                   </ul>
                 )}
               </div>

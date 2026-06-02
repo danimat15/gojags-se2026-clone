@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   ChevronDown,
-  Lock,
   Check,
   Video,
   Link as LinkIcon,
@@ -58,18 +57,11 @@ function SectionAccordion({
   defaultOpen: boolean;
 }) {
   const hasActive = section.items.some((i) => i.id === activeItemId);
-  const [open, setOpen] = useState(false);
-  const isFirstRender = useRef(true);
+  const [open, setOpen] = useState(defaultOpen || hasActive);
 
   useEffect(() => {
     if (hasActive) {
-      if (isFirstRender.current) {
-        isFirstRender.current = false;
-      } else {
-        setOpen(true);
-      }
-    } else {
-      setOpen(false);
+      setOpen(true);
     }
   }, [hasActive]);
 
@@ -78,21 +70,14 @@ function SectionAccordion({
   ).length;
 
   const handleHeaderClick = () => {
-    if (hasActive) {
-      setOpen(!open);
-    }
+    setOpen(!open);
   };
 
   return (
     <div className="bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-gray-200 dark:border-slate-800">
       <button
         onClick={handleHeaderClick}
-        disabled={!hasActive}
-        className={`w-full flex items-center justify-between px-3.5 py-3 transition-colors ${
-          hasActive
-            ? "hover:bg-gray-50 dark:hover:bg-slate-800/60 cursor-pointer"
-            : "cursor-not-allowed opacity-60 bg-gray-50/20 dark:bg-slate-900/10"
-        }`}
+        className={`w-full flex items-center justify-between px-3.5 py-3 transition-colors hover:bg-gray-50 dark:hover:bg-slate-800/60 cursor-pointer`}
       >
         <div className="flex items-center gap-2.5 flex-1 min-w-0">
           <div
@@ -115,15 +100,11 @@ function SectionAccordion({
             </p>
           </div>
         </div>
-        {hasActive ? (
-          <ChevronDown
-            className={`w-3.5 h-3.5 text-gray-400 flex-shrink-0 transition-transform duration-200 ${
-              open ? "rotate-180" : ""
-            }`}
-          />
-        ) : (
-          <Lock className="w-3.5 h-3.5 text-gray-400/50 flex-shrink-0" />
-        )}
+        <ChevronDown
+          className={`w-3.5 h-3.5 text-gray-400 flex-shrink-0 transition-transform duration-200 ${
+            open ? "rotate-180" : ""
+          }`}
+        />
       </button>
 
       {open && (
